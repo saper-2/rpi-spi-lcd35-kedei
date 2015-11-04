@@ -236,6 +236,9 @@ int spi_transmit(int *h, uint8_t *data, int len, uint32_t spi_speed, uint8_t spi
 #define LCD_SPI_MODE SPI_MODE_0
 #define LCD_SPI_SPEED 35000000
 #define LCD_SPI_BITS_PER_WORD 8
+
+#define LCD_WIDTH 480
+#define LCD_HEIGHT 320
    
 void lcd_reset(int *spih) {
 	uint8_t buff[4] = { 0,0,0,0 };
@@ -410,7 +413,6 @@ void lcd_fill2(int *spih, uint16_t sx, uint16_t sy, uint16_t x, uint16_t y, uint
 		lcd_data(spih, color565);
 	}	
 }
-	
 
 void lcd_init(int *spih) {
 	lcd_reset(spih);
@@ -605,8 +607,27 @@ int main(int argc, char **argv)
 	std::cout << "Fill black." << std::endl;
 	lcd_fill(&spi, 0x0000);
 	delayms(500);
-	std::cout << "Fill whilte." << std::endl;
+	
+	std::cout << "Fill red." << std::endl;
+	lcd_fill(&spi, 0xF800);
+	delayms(500);
+	
+	std::cout << "Fill green." << std::endl;
+	lcd_fill(&spi, 0x07E0);
+	delayms(500);
+	
+	std::cout << "Fill blue." << std::endl;
+	lcd_fill(&spi, 0x001F);
+	delayms(500);
+	
+	
+	std::cout << "Fill white." << std::endl;
 	lcd_fill(&spi, 0xffff);
+	delayms(500);
+	
+	std::cout << "Fill black." << std::endl;
+	lcd_fill(&spi, 0x0000);
+	
 	
 	r = spi_close(&spi);
 	std::cout << "SPI 0.1 closed. (" << ((int)r) << ")" << std::endl;
