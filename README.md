@@ -13,7 +13,7 @@ And run with sudo:
 
 Both programs are *slow* (very slow :sad: ) , because code access SPI through spi_bcm2835 kernel module - this is bottleneck.
 
-<h3>libbcm2835</h3>
+# using libbcm2835
 *notro* advised to use bcm2835 lib, so I did, and now I get some rather good results.
 I have created new program with bcm2835 lib from http://www.airspayce.com/mikem/bcm2835/index.html
 This lib speed SPI about 10 times :smile:
@@ -24,7 +24,9 @@ Compile:
 and run with sudo:
 ```sudo ./lcd-test-bcmc```
 
-<h2>LCD Module</h2>
+I had problems with linking to bcm2835 lib from C++ (ld was complaining 'undefined reference' for everyone function call from bcm2835 lib), so I had to port my program from C++ to C (actually for unknown reason I can't use globally installed lib bcm2835 :sad: ).
+
+# LCD Module
 This is how the screen looks like:<br/>
 <img src="https://github.com/saper-2/rpi-spi-lcd35-kedei/blob/master/lcd-photos/tft35-front.jpg" width="300px" /> <img src="https://github.com/saper-2/rpi-spi-lcd35-kedei/blob/master/lcd-photos/tft35-back.jpg" width="300px" />
 
