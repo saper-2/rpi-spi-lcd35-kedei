@@ -1,0 +1,140 @@
+diff --git a/arch/arm/mach-bcm2708/bcm2708.c b/arch/arm/mach-bcm2708/bcm2708.c
+index 1b9c3be..460fdd6 100644
+--- a/arch/arm/mach-bcm2708/bcm2708.c
++++ b/arch/arm/mach-bcm2708/bcm2708.c
+@@ -353,6 +353,11 @@ static struct platform_device bcm2708_fb_device = {
+ 		},
+ };
+ 
++static struct platform_device bcm2708_ili9341= {
++	.name = "ili9341",
++	.id = 0,
++};
++
+ static struct resource bcm2708_usb_resources[] = {
+ 	[0] = {
+ 		.start = USB_BASE,
+@@ -603,11 +608,11 @@ static struct resource bcm2708_bsc0_resources[] = {
+ 		.start = BSC0_BASE,
+ 		.end = BSC0_BASE + SZ_256 - 1,
+ 		.flags = IORESOURCE_MEM,
+-	}, {
++	}/*, {
+ 		.start = INTERRUPT_I2C,
+ 		.end = INTERRUPT_I2C,
+ 		.flags = IORESOURCE_IRQ,
+-	}
++	}*/
+ };
+ 
+ static struct platform_device bcm2708_bsc0_device = {
+@@ -623,11 +628,11 @@ static struct resource bcm2708_bsc1_resources[] = {
+ 		.start = BSC1_BASE,
+ 		.end = BSC1_BASE + SZ_256 - 1,
+ 		.flags = IORESOURCE_MEM,
+-	}, {
++	}/*, {
+ 		.start = INTERRUPT_I2C,
+ 		.end = INTERRUPT_I2C,
+ 		.flags = IORESOURCE_IRQ,
+-	}
++	}*/
+ };
+ 
+ static struct platform_device bcm2708_bsc1_device = {
+@@ -901,6 +906,7 @@ void __init bcm2708_init(void)
+ 	w1_gpio_pdata.ext_pullup_enable_pin = w1_gpio_pullup;
+ 	bcm_register_device_dt(&w1_device);
+ #endif
++	bcm_register_device(&bcm2708_ili9341);
+ 	bcm_register_device_dt(&bcm2708_fb_device);
+ 	bcm_register_device_dt(&bcm2708_usb_device);
+ 
+diff --git a/arch/arm/mach-bcm2709/bcm2709.c b/arch/arm/mach-bcm2709/bcm2709.c
+index e1934dc..650b30d 100644
+--- a/arch/arm/mach-bcm2709/bcm2709.c
++++ b/arch/arm/mach-bcm2709/bcm2709.c
+@@ -364,6 +364,11 @@ static struct platform_device bcm2708_fb_device = {
+ 		},
+ };
+ 
++static struct platform_device bcm2708_ili9341= {
++	.name = "ili9341",
++	.id = 0,
++};
++
+ static struct resource bcm2708_usb_resources[] = {
+ 	[0] = {
+ 	       .start = USB_BASE,
+@@ -624,11 +629,11 @@ static struct resource bcm2708_bsc0_resources[] = {
+ 		.start = BSC0_BASE,
+ 		.end = BSC0_BASE + SZ_256 - 1,
+ 		.flags = IORESOURCE_MEM,
+-	}, {
++	}/*, {
+ 		.start = INTERRUPT_I2C,
+ 		.end = INTERRUPT_I2C,
+ 		.flags = IORESOURCE_IRQ,
+-	}
++	}*/
+ };
+ 
+ static struct platform_device bcm2708_bsc0_device = {
+@@ -644,11 +649,11 @@ static struct resource bcm2708_bsc1_resources[] = {
+ 		.start = BSC1_BASE,
+ 		.end = BSC1_BASE + SZ_256 - 1,
+ 		.flags = IORESOURCE_MEM,
+-	}, {
++	}/*, {
+ 		.start = INTERRUPT_I2C,
+ 		.end = INTERRUPT_I2C,
+ 		.flags = IORESOURCE_IRQ,
+-	}
++	}*/
+ };
+ 
+ static struct platform_device bcm2708_bsc1_device = {
+@@ -922,6 +927,7 @@ void __init bcm2709_init(void)
+ 	w1_gpio_pdata.ext_pullup_enable_pin = w1_gpio_pullup;
+ 	bcm_register_device_dt(&w1_device);
+ #endif
++	bcm_register_device(&bcm2708_ili9341);
+ 	bcm_register_device_dt(&bcm2708_fb_device);
+ 	bcm_register_device_dt(&bcm2708_usb_device);
+ 
+diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
+index c073d55..f8343b5 100644
+--- a/drivers/video/fbdev/Kconfig
++++ b/drivers/video/fbdev/Kconfig
+@@ -238,6 +238,19 @@ config FB_BCM2708
+ 	  here and read <file:Documentation/kbuild/modules.txt>.  The module
+ 	  will be called bcm2708_fb.
+ 
++config FB_ILI9341
++	tristate "ILI9341 connected to Raspberry Pi GPIO support"
++	depends on FB
++	select FB_SYS_FILLRECT
++	select FB_SYS_COPYAREA
++	select FB_SYS_IMAGEBLIT
++	select FB_SYS_FOPS
++	select FB_DEFERRED_IO
++	help
++	  This driver implements a framebuffer on an LCD controlled by a
++	  ILI9341 (or compatible) controller connected to the GPIO of the 
++	  Raspberry Pi.
++
+ config FB_GRVGA
+ 	tristate "Aeroflex Gaisler framebuffer support"
+ 	depends on FB && SPARC
+diff --git a/drivers/video/fbdev/Makefile b/drivers/video/fbdev/Makefile
+index ee7568b..bd0045e 100644
+--- a/drivers/video/fbdev/Makefile
++++ b/drivers/video/fbdev/Makefile
+@@ -130,6 +130,7 @@ obj-$(CONFIG_FB_MB862XX)	  += mb862xx/
+ obj-$(CONFIG_FB_MSM)              += msm/
+ obj-$(CONFIG_FB_NUC900)           += nuc900fb.o
+ obj-$(CONFIG_FB_JZ4740)		  += jz4740_fb.o
++obj-$(CONFIG_FB_ILI9341)	  += ili9341.o
+ obj-$(CONFIG_FB_PUV3_UNIGFX)      += fb-puv3.o
+ obj-$(CONFIG_FB_HYPERV)		  += hyperv_fb.o
+ obj-$(CONFIG_FB_OPENCORES)	  += ocfb.o

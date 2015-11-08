@@ -149,8 +149,11 @@ def lcd_fill2(sx,sy,x,y,color565):
 	
 	return
 	
-
+print "LCD RESET"
 lcd_reset()
+print "LCD RESET end."
+
+print "LCD INIT..."
 time.sleep(0.1)
 lcd_cmd(0x0000)
 time.sleep(0.0001)
@@ -320,8 +323,13 @@ lcd_data(0x003f)
 
 lcd_cmd(0x002c) 
 
+print "LCD INIT end."
+
+print "Fill lcd with black."
 lcd_fill(0x0000)
 time.sleep(5)
+
+print "Draw rectangle in middle of screen with all colors..."
 
 for color in range(0, 65535):
 	lcd_fill2(180,110,300,210,color)
@@ -329,10 +337,12 @@ for color in range(0, 65535):
 	time.sleep(0.1)
 	
 time.sleep(5)
+
+print "Clear display (flii black)."
 lcd_fill(0x0000)
 
 
-
+print "END."
 
 
 

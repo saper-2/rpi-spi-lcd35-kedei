@@ -1,4 +1,7 @@
 // ************ SPI TEST APP **************
+// Test 1 - First test program, practically port of python script
+// ----------------------------------------
+
 
 #include <stdio.h>
 #include <stdlib.h>
