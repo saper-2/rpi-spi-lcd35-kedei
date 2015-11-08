@@ -1,13 +1,16 @@
 // ************ SPI TEST APP **************
-// Test bcm - SPI transmission controlled by bcm2835 library (http://www.airspayce.com/mikem/bcm2835/index.html) - this is the fastest routine
-// Language: C (not C++ like previous tests)
+// Test bcm - SPI transmission controlled by bcm2835 library (http://www.airspayce.com/mikem/bcm2835/index.html) - this program is even more faster than in this C
+//            This code use 3 bytes per spi transfer, this make filling whole screen about 24ms faster :lol:
+// Language: C++
+// Compile: g++ -o lcd-test-bcmc++ lcd_test_bcm.cpp -lbcm2835
+// Info: Put -l flag at end of compiler command line, otherwise you will get errors (undefined reference...)
 // ----------------------------------------
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-//#include <cstring>
-//#include <iostream>
+#include <string>
+#include <cstring>
+#include <iostream>
 #include <errno.h> // error handling
 #include <sys/time.h> // for delay function
 #include <stdint.h> // aliases for int types (unsigned char = uint8_t, etc...)
@@ -19,6 +22,19 @@
 #include <bcm2835.h>
 
 //#define _DEBUG_
+// check spi_init() function
+//#define LCD_SPI_DEVICE "/dev/spidev0.1"
+//#define LCD_SPI_MODE SPI_MODE_0
+//#define LCD_SPI_SPEED 35000000
+//#define LCD_SPI_BITS_PER_WORD 8
+//#define SPI_DELAY_USECS 0
+
+#define LCD_CS 1
+#define TOUCH_CS 0
+
+#define LCD_WIDTH 480
+#define LCD_HEIGHT 320
+
 
 int delayus(int us) {
 	struct timespec tim, timr;
@@ -147,19 +163,6 @@ int spi_transmit(int devsel, uint8_t *data, int len) {
 /* **********************************************************************************
 	LCD ROUTINES
    ********************************************************************************** */
-
-// check spi_init() function
-//#define LCD_SPI_DEVICE "/dev/spidev0.1"
-//#define LCD_SPI_MODE SPI_MODE_0
-//#define LCD_SPI_SPEED 35000000
-//#define LCD_SPI_BITS_PER_WORD 8
-//#define SPI_DELAY_USECS 0
-
-#define LCD_CS 1
-#define TOUCH_CS 0
-
-#define LCD_WIDTH 480
-#define LCD_HEIGHT 320
    
 void lcd_reset(void) {
 	uint8_t buff[4] = { 0,0,0,0 };
@@ -172,14 +175,17 @@ void lcd_reset(void) {
 	//bcm2835_spi_chipSelect(BCM2835_SPI_CS1);
 	
 	// set Reset LOW
-	spi_transmit(LCD_CS, &buff[0], 4);
+	//spi_transmit(LCD_CS, &buff[0], 4);
+	spi_transmit(LCD_CS, &buff[0], 3);
 	
 	delayms(50);
 	
 	// set Reset High
 	buff[0]=buff[1]=buff[2] = 0;
-	buff[3]=0x01;
-	spi_transmit(LCD_CS, &buff[0], 4);
+	//buff[3]=0x01;
+	buff[2]=0x01;
+	//spi_transmit(LCD_CS, &buff[0], 4);
+	spi_transmit(LCD_CS, &buff[0], 3);
 	
 	#ifdef _DEBUG_
 		printf("LCD_RESET end.\n");
@@ -195,17 +201,23 @@ void lcd_data(uint16_t data) {
 	memset(&b2,0,sizeof(b2));
 	
 	// setup buffers
-	b2[1] = b1[1] =  data>>8;
-	b2[2] = b1[2] = data&0x00ff;
-	b1[3] = 0x15; // 0x15 - DATA_BE const from ili9341.c (BE is short form "before")
-	b2[3] = 0x1F; // 0x1F - DATA_AF const from ili9341.c (AF is short form "after")
+	//b2[1] = b1[1] =  data>>8;
+	b2[0] = b1[0] =  data>>8;
+	//b2[2] = b1[2] = data&0x00ff;
+	b2[1] = b1[1] = data&0x00ff;
+	//b1[3] = 0x15; // 0x15 - DATA_BE const from ili9341.c (BE is short form "before")
+	b1[2] = 0x15; // 0x15 - DATA_BE const from ili9341.c (BE is short form "before")
+	//b2[3] = 0x1F; // 0x1F - DATA_AF const from ili9341.c (AF is short form "after")
+	b2[2] = 0x1F; // 0x1F - DATA_AF const from ili9341.c (AF is short form "after")
 	
 	// Select LCD
 	//bcm2835_spi_chipSelect(BCM2835_SPI_CS1);
 	// send it - prepare
-	spi_transmit(LCD_CS, &b1[0], 4);//bcm2835_spi_transfern(&b1, 4);
+	//spi_transmit(LCD_CS, &b1[0], 4);//bcm2835_spi_transfern(&b1, 4);
+	spi_transmit(LCD_CS, &b1[0], 3);//bcm2835_spi_transfern(&b1, 4);
 	// send it - store in LCD
-	spi_transmit(LCD_CS, &b2[0], 4); //bcm2835_spi_transfern(&b2, 4);
+	//spi_transmit(LCD_CS, &b2[0], 4); //bcm2835_spi_transfern(&b2, 4);
+	spi_transmit(LCD_CS, &b2[0], 3); //bcm2835_spi_transfern(&b2, 4);
 	
 }
 
@@ -216,17 +228,23 @@ void lcd_cmd(uint16_t cmd) {
 	memset(&b2,0,sizeof(b2));
 	
 	// setup buffers
-	b2[1] = b1[1] =  cmd>>8;
-	b2[2] = b1[2] = cmd&0x00ff;
-	b1[3] = 0x11; // 0x11 - CMD_BE const from ili9341.c (BE is short form "before")
-	b2[3] = 0x1B; // 0x1B - CMD_AF const from ili9341.c (AF is short form "after")
+	//b2[1] = b1[1] =  cmd>>8;
+	b2[0] = b1[0] =  cmd>>8;
+	//b2[2] = b1[2] = cmd&0x00ff;
+	b2[1] = b1[1] = cmd&0x00ff;
+	//b1[3] = 0x11; // 0x11 - CMD_BE const from ili9341.c (BE is short form "before")
+	b1[2] = 0x11; // 0x11 - CMD_BE const from ili9341.c (BE is short form "before")
+	//b2[3] = 0x1B; // 0x1B - CMD_AF const from ili9341.c (AF is short form "after")
+	b2[2] = 0x1B; // 0x1B - CMD_AF const from ili9341.c (AF is short form "after")
 	
 	// Select LCD
 	//bcm2835_spi_chipSelect(BCM2835_SPI_CS1);
 	// send it - prepare
-	spi_transmit(LCD_CS, &b1[0], 4);//bcm2835_spi_transfern(&b1, 4);
+	//spi_transmit(LCD_CS, &b1[0], 4);//bcm2835_spi_transfern(&b1, 4);
+	spi_transmit(LCD_CS, &b1[0], 3);//bcm2835_spi_transfern(&b1, 4);
 	// send it - store in LCD
-	spi_transmit(LCD_CS, &b2[0], 4); //bcm2835_spi_transfern(&b2, 4);
+	//spi_transmit(LCD_CS, &b2[0], 4); //bcm2835_spi_transfern(&b2, 4);
+	spi_transmit(LCD_CS, &b2[0], 3); //bcm2835_spi_transfern(&b2, 4);
 	
 }
 

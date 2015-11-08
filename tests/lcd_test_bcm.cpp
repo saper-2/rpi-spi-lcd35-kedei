@@ -1,13 +1,15 @@
 // ************ SPI TEST APP **************
-// Test bcm - SPI transmission controlled by bcm2835 library (http://www.airspayce.com/mikem/bcm2835/index.html) - this is the fastest routine
-// Language: C (not C++ like previous tests)
+// Test bcm - SPI transmission controlled by bcm2835 library (http://www.airspayce.com/mikem/bcm2835/index.html) - this program is even more faster than in this C
+// Language: C++
+// Compile: g++ -o lcd-test-bcmc++ lcd_test_bcm.cpp -lbcm2835
+// Info: Put -l flag at end of compiler command line, otherwise you will get errors (undefined reference...)
 // ----------------------------------------
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-//#include <cstring>
-//#include <iostream>
+#include <string>
+#include <cstring>
+#include <iostream>
 #include <errno.h> // error handling
 #include <sys/time.h> // for delay function
 #include <stdint.h> // aliases for int types (unsigned char = uint8_t, etc...)
@@ -19,6 +21,19 @@
 #include <bcm2835.h>
 
 //#define _DEBUG_
+// check spi_init() function
+//#define LCD_SPI_DEVICE "/dev/spidev0.1"
+//#define LCD_SPI_MODE SPI_MODE_0
+//#define LCD_SPI_SPEED 35000000
+//#define LCD_SPI_BITS_PER_WORD 8
+//#define SPI_DELAY_USECS 0
+
+#define LCD_CS 1
+#define TOUCH_CS 0
+
+#define LCD_WIDTH 480
+#define LCD_HEIGHT 320
+
 
 int delayus(int us) {
 	struct timespec tim, timr;
@@ -147,19 +162,6 @@ int spi_transmit(int devsel, uint8_t *data, int len) {
 /* **********************************************************************************
 	LCD ROUTINES
    ********************************************************************************** */
-
-// check spi_init() function
-//#define LCD_SPI_DEVICE "/dev/spidev0.1"
-//#define LCD_SPI_MODE SPI_MODE_0
-//#define LCD_SPI_SPEED 35000000
-//#define LCD_SPI_BITS_PER_WORD 8
-//#define SPI_DELAY_USECS 0
-
-#define LCD_CS 1
-#define TOUCH_CS 0
-
-#define LCD_WIDTH 480
-#define LCD_HEIGHT 320
    
 void lcd_reset(void) {
 	uint8_t buff[4] = { 0,0,0,0 };
@@ -206,7 +208,6 @@ void lcd_data(uint16_t data) {
 	spi_transmit(LCD_CS, &b1[0], 4);//bcm2835_spi_transfern(&b1, 4);
 	// send it - store in LCD
 	spi_transmit(LCD_CS, &b2[0], 4); //bcm2835_spi_transfern(&b2, 4);
-	
 }
 
 void lcd_cmd(uint16_t cmd) {
@@ -227,7 +228,6 @@ void lcd_cmd(uint16_t cmd) {
 	spi_transmit(LCD_CS, &b1[0], 4);//bcm2835_spi_transfern(&b1, 4);
 	// send it - store in LCD
 	spi_transmit(LCD_CS, &b2[0], 4); //bcm2835_spi_transfern(&b2, 4);
-	
 }
 
 void lcd_setptr(void) {
