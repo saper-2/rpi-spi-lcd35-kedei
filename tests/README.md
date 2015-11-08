@@ -14,7 +14,8 @@ To run test program use sudo:
 
 
 Compile by executing scripts:
-```pi@raspiv2 ~/lcd/spi/tests $ ./clean.sh
+```
+pi@raspiv2 ~/lcd/spi/tests $ ./clean.sh
 pi@raspiv2 ~/lcd/spi/tests $ ./build-tests.sh
 ```
 
