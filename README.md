@@ -1,14 +1,14 @@
 # Driver for user software to controll KeDei 3.5" TFT LCD on SPI without custom kernel
 
-I have moved all test routines into tests directory.
-
-I am going to create a simple driver to be included into user software. I plan to create some simple drawing routines and touch panel control.
-Code init only LCD, as for touch I do not "touch" it :smile:
-
+I had in plans to create a custom driver but I decided this is not worth my time. I'm going to "re-interface" this lcd to be supported by fbtft. I have a prototype pcb with fbtft-spi interface ready (I have to send this project to pcb prototype service).
 
 # LCD Module
-This is how the screen looks like:<br/>
-<img src="https://github.com/saper-2/rpi-spi-lcd35-kedei/blob/master/lcd-photos/tft35-front.jpg" width="300px" /> <img src="https://github.com/saper-2/rpi-spi-lcd35-kedei/blob/master/lcd-photos/tft35-back.jpg" width="300px" />
+There is 3 version already each one is built on different LCD display, constant is:
+- SPI to LCD interface
+- draw commands (cmds for setting draw window in lcd)
 
-In dir lcd-photos there is also schematic by reverse engineering pcb :)
-I put there in src dir driver & diff files , more info in that dir.
+I have moved data from `lcd-photos` to `lcd-module-info` and groupped informations (and kernels) by lcd version.
+
+# Test code
+I have written for v1 some test routines that init lcd and draw few colors using different drivers (python, libbcm2835, linux-spi).
+
