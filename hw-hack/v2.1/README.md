@@ -7,6 +7,9 @@ Sorry it just a test of init, not actual working.
 
 In photos, you can see that there is something working but not very much :/
 
+# adapter-pcb direcory
+Drawings of two versions of fbtft-spi adapters pcb.
+
 ## Scripts
 
 Just run script ```sudo ./ili.sh``` and it will do everything :) , or just run to init lcd:
