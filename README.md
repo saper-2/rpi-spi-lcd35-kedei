@@ -3,7 +3,7 @@
 I had in plans to create a custom driver but I decided this is not worth my time. I'm going to "re-interface" this lcd to be supported by fbtft. I have a prototype pcb with fbtft-spi interface ready (I have to send this project to pcb prototype service).
 
 # LCD Module
-There is 3 version already each one is built on different LCD display, constant is:
+There is 7 version already each one is built on different LCD display, constant is:
 - SPI to LCD interface
 - draw commands (cmds for setting draw window in lcd)
 
@@ -12,3 +12,13 @@ I have moved data from `lcd-photos` to `lcd-module-info` and groupped informatio
 # Test code
 I have written for v1 some test routines that init lcd and draw few colors using different drivers (python, libbcm2835, linux-spi).
 
+# Adapter FBTFT test
+Unfortunatly, because of my "spider-circuit" I've broken my lcd (I've made a some short :cry: ), but my v1 pcb adapter (one-side pcb with wire jumpers) works identically like the spider-like circuit so I assume the circuit is ok and connections too, but lcd gone bad... See photos in ```hw-hack\v2.1\results``` :)
+
+# EOF
+This is probably end of me playing with KeDei lcds. From this point, I'm going to buy next displays that are nativly supported by fbtft :smile: (and fbtft is now part of official raspberry pi kernel :smile: ).
+
+##What lcds are compatible?
+Check this page: https://github.com/notro/fbtft/wiki/LCD-Modules
+
+# EOT
