@@ -6,6 +6,8 @@ There are different lcd modules in each batch but subversions might not differ f
 # Displays version: 6.1 , 6.2 , 6.3
 For v6.2 is already known init seq. but the sequence don't work certainly with v6.3, so my guess is that the driver setup all registers, even those that doesn't exists in v6.2, but do exists in v6.3 . And the lcd controller just ignore the writes to register that don't exists in v6.2 ...
 
+# The HDMI 3.5" display version
+KeDei released a 3,5" display version with HDMI interface. More info in my review at RPi forum: https://www.raspberrypi.org/forums/viewtopic.php?f=45&t=175616
 
 # Links
 * TinDRM: https://github.com/notro/tinydrm/blob/master/README.md
