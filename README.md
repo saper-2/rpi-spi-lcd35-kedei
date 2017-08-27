@@ -1,3 +1,11 @@
+# Changelog
+- 2016-06-18
+ - some minor changes in structure of repo, added some info about versions & photos
+- 2016-08-05
+ - I decided to add change log section :D
+ - Added info for reverse engineered init for v5 lcd in ```tests```
+
+
 # Driver for user software to controll KeDei 3.5" TFT LCD on SPI without custom kernel
 
 I had in plans to create a custom driver but I decided this is not worth my time. I'm going to "re-interface" this lcd to be supported by fbtft. I have a prototype pcb with fbtft-spi interface ready (I have to send this project to pcb prototype service).
