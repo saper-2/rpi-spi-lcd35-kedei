@@ -1,7 +1,20 @@
-# v6.2
+# v6.3
 
-I don't own this version LCD so I don't have any photos.
-Driver for v6.0, v6.1 and v6.3 should work with this one too.
+Seems like **kpishere** managed to reverse engineering the driver and have it working :grin: :thumbsup:
+Here is the link to the repo:
 
-If somebody get diff or ili9341.c file the please share with me I will attach it to src .
+https://github.com/kpishere/fbcp-ili9341
+
+# tinydrm
+There is also module for tinydrm that should work with display versions:
+* v6.0
+* 6.1
+* 6.2
+* 6.3 (confirmed see linked repo)
+
+Here is the link to GitHub repo:
+https://github.com/mihailstefanov/tinydrm/tree/master/keidei35_v60
+
+Good job **mihailstefanov** :thumbsup: :clap:
+
 
